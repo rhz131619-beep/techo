@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Techo · Alquiler, anticrético y venta en Bolivia</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  --bg: #f6f3f1;
+  --card: #ffffff;
+  --ink: #241a22;
+  --muted: #6f6169;
+  --line: #e7dfe3;
+  --chip: #efe8ec;
+  --brand: #a3205a;
+  --brand-soft: #f9e4ee;
+  --alq: #0b7f70; --alq-soft: #d8f0ec;
+  --ant: #9a5600; --ant-soft: #fbe9cc;
+  --ven: #3d4fc4; --ven-soft: #e1e5fb;
+  --danger: #c63a2a;
+  --th1: 90%; --th2: 76%; --ts: 65%;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #17111a; --card: #221a26; --ink: #f2eaf0; --muted: #a798a1; --line: #382c3d; --chip: #2e2433;
+    --brand: #d2478a; --brand-soft: #4a1b34;
+    --alq: #3cc7b3; --alq-soft: #123a35;
+    --ant: #f0a93a; --ant-soft: #43300f;
+    --ven: #8c9bff; --ven-soft: #252c5c;
+    --th1: 26%; --th2: 36%; --ts: 38%;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #17111a; --card: #221a26; --ink: #f2eaf0; --muted: #a798a1; --line: #382c3d; --chip: #2e2433;
+  --brand: #d2478a; --brand-soft: #4a1b34;
+  --alq: #3cc7b3; --alq-soft: #123a35;
+  --ant: #f0a93a; --ant-soft: #43300f;
+  --ven: #8c9bff; --ven-soft: #252c5c;
+  --th1: 26%; --th2: 36%; --ts: 38%;
+}
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: "Figtree", -apple-system, "Segoe UI", Roboto, sans-serif; font-size: 15px; line-height: 1.5; }
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+a { color: inherit; }
+.wrap { max-width: 1060px; margin: 0 auto; }
+
+/* header */
+.top { position: sticky; top: 0; z-index: 6; background: var(--card); border-bottom: 1px solid var(--line); }
+.top .wrap { padding: 10px 14px 0; }
+.bar { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.logo { display: flex; align-items: center; gap: 6px; font-family: "Fraunces", Georgia, serif; font-weight: 700; font-size: 26px; color: var(--brand); letter-spacing: -.3px; }
+.logo svg { width: 28px; height: 28px; }
+.city { border: 1px solid var(--line); background: var(--chip); border-radius: 18px; padding: 6px 12px; font-weight: 600; max-width: 55%; }
+.searchrow { margin: 10px 0 4px; }
+.search { width: 100%; border: 1px solid var(--line); border-radius: 22px; padding: 10px 16px; background: var(--bg); }
+.tabs { display: flex; gap: 2px; overflow-x: auto; scrollbar-width: none; margin: 0 -14px; padding: 0 8px; }
+.tabs::-webkit-scrollbar { display: none; }
+.tab { flex: none; border: 0; background: none; padding: 10px 12px 9px; font-weight: 600; color: var(--muted); position: relative; font-size: 15px; }
+.tab.on { color: var(--ink); }
+.tab.on::after { content: ""; position: absolute; left: 12px; right: 12px; bottom: 0; height: 3px; border-radius: 2px; background: var(--brand); }
+.tab[data-op="alquiler"].on::after { background: var(--alq); }
+.tab[data-op="anticretico"].on::after { background: var(--ant); }
+.tab[data-op="venta"].on::after { background: var(--ven); }
+.top.plain .searchrow, .top.plain .tabs { display: none; }
+.top.plain .bar { padding-bottom: 10px; }
+.ptitle { font-weight: 600; color: var(--muted); }
+
+/* filters */
+.filters { background: var(--card); border-bottom: 1px solid var(--line); }
+.frow { display: flex; gap: 8px; overflow-x: auto; padding: 8px 14px 0; scrollbar-width: none; align-items: center; }
+.frow:last-child { padding-bottom: 8px; }
+.frow::-webkit-scrollbar { display: none; }
+.flab { flex: none; font-size: 12px; color: var(--muted); }
+.chip { flex: none; border: 1px solid var(--line); background: var(--chip); border-radius: 16px; padding: 3px 12px; font-size: 13px; }
+.chip.on { background: var(--brand-soft); color: var(--brand); border-color: var(--brand); font-weight: 700; }
+.chip:focus-visible, .tab:focus-visible, .nav button:focus-visible, .btn:focus-visible, .fav:focus-visible, .city:focus-visible { outline: 3px solid var(--brand); outline-offset: 1px; }
+.hello { padding: 14px 14px 0; display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+.hello h1 { margin: 0; font-family: "Fraunces", Georgia, serif; font-size: 22px; font-weight: 600; line-height: 1.2; }
+.linkbtn { border: 0; background: none; color: var(--brand); font-weight: 700; text-decoration: underline; padding: 4px 0; font-size: 14px; }
+.count { padding: 6px 14px 0; color: var(--muted); font-size: 13px; }
+
+/* cards */
+main { padding-bottom: 90px; }
+.grid { display: grid; grid-template-columns: 1fr; gap: 14px; padding: 12px 14px; }
+@media (min-width: 640px) { .grid { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 960px) { .grid { grid-template-columns: 1fr 1fr 1fr; } }
+.card { background: var(--card); border-radius: 14px; overflow: hidden; border: 1px solid var(--line); cursor: pointer; display: flex; flex-direction: column; }
+.card:focus-visible { outline: 3px solid var(--brand); outline-offset: 2px; }
+.ph { position: relative; aspect-ratio: 16/10; display: flex; align-items: center; justify-content: center; font-size: 64px;
+  background: linear-gradient(135deg, hsl(var(--h) var(--ts) var(--th1)), hsl(var(--h) var(--ts) var(--th2))); overflow: hidden; }
+.ph img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.opb { position: absolute; left: 10px; top: 10px; z-index: 1; font-size: 12px; font-weight: 700; padding: 2px 10px; border-radius: 12px; background: var(--card); }
+.opb.alquiler { color: var(--alq); } .opb.anticretico { color: var(--ant); } .opb.venta { color: var(--ven); }
+.fav { position: absolute; right: 8px; top: 8px; z-index: 1; width: 36px; height: 36px; border: 0; border-radius: 50%; background: var(--card); font-size: 20px; color: var(--muted); display: flex; align-items: center; justify-content: center; }
+.fav.on { color: #e5484d; }
+.cb { padding: 10px 12px 12px; display: flex; flex-direction: column; gap: 2px; }
+.pr { font-size: 21px; font-weight: 800; }
+.pr small { font-size: 13px; font-weight: 500; color: var(--muted); }
+.pr.alquiler { color: var(--alq); } .pr.anticretico { color: var(--ant); } .pr.venta { color: var(--ven); }
+.cb h3 { margin: 0; font-size: 16px; font-weight: 600; line-height: 1.35; }
+.loc, .sp { color: var(--muted); font-size: 13.5px; }
+.tg { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 4px; }
+.tag { font-size: 12px; padding: 0 8px; border-radius: 5px; background: var(--chip); color: var(--muted); }
+.empty { padding: 56px 24px; text-align: center; color: var(--muted); }
+.empty .big { font-size: 46px; }
+.btn { border: 0; border-radius: 10px; padding: 11px 18px; background: var(--brand); color: #fff; font-weight: 700; font-size: 16px; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 6px; text-align: center; }
+.btn.ghost { background: transparent; color: var(--brand); border: 1.5px solid var(--brand); }
+.btn.wa { background: #1a9d4f; }
+.btn.block { width: 100%; }
+.btn.small { padding: 6px 14px; font-size: 14px; border-radius: 8px; }
+.btn.danger { background: transparent; color: var(--danger); border: 1.5px solid var(--danger); }
+.btn.off { opacity: .55; pointer-events: none; }
+
+/* nav */
+.nav { position: fixed; bottom: 0; left: 0; right: 0; z-index: 8; background: var(--card); border-top: 1px solid var(--line); padding-bottom: env(safe-area-inset-bottom, 0px); }
+.nav .in { max-width: 560px; margin: 0 auto; display: flex; }
+.nav button { flex: 1; border: 0; background: none; padding: 7px 0 6px; color: var(--muted); font-size: 12px; display: flex; flex-direction: column; align-items: center; gap: 1px; font-weight: 600; }
+.nav button span { font-size: 21px; line-height: 1.2; }
+.nav button.on { color: var(--brand); }
+.nav .plus span { background: var(--brand); color: #fff; width: 42px; height: 28px; border-radius: 14px; font-size: 22px; line-height: 28px; text-align: center; }
+
+/* detail */
+#detail { position: fixed; inset: 0; background: var(--bg); overflow-y: auto; z-index: 20; display: none; }
+#detail.show { display: block; }
+.dpage { max-width: 760px; margin: 0 auto; min-height: 100%; background: var(--card); position: relative; }
+.dtop { position: sticky; top: 0; z-index: 3; background: var(--card); border-bottom: 1px solid var(--line); padding: 8px 12px; padding-top: calc(8px + env(safe-area-inset-top, 0px)); display: flex; align-items: center; gap: 10px; }
+.back { border: 1px solid var(--line); background: var(--chip); border-radius: 16px; padding: 4px 14px; font-weight: 600; }
+.gal { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
+.gal::-webkit-scrollbar { display: none; }
+.gal .ph { flex: none; width: 100%; scroll-snap-align: center; aspect-ratio: 16/10; font-size: 96px; }
+.dots { text-align: center; color: var(--muted); font-size: 12px; padding: 4px 0 0; }
+.dbody { padding: 14px 16px 18px; }
+.dpr { font-size: 28px; font-weight: 800; }
+.dpr small { font-size: 15px; font-weight: 500; color: var(--muted); }
+.dbody h2 { margin: 2px 0 4px; font-family: "Fraunces", Georgia, serif; font-size: 22px; font-weight: 600; line-height: 1.3; }
+.specs { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 10px; margin: 14px 0; padding: 12px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.specs div small { display: block; color: var(--muted); font-size: 12px; }
+.specs div b { font-size: 15px; }
+.dbody h4 { margin: 14px 0 4px; font-size: 15px; }
+.desc { margin: 0; white-space: pre-wrap; line-height: 1.7; }
+.note { margin: 14px 0 0; padding: 10px 12px; border-radius: 10px; font-size: 13.5px; line-height: 1.55; }
+.note.ant { background: var(--ant-soft); color: var(--ant); }
+.note.safe { background: var(--brand-soft); color: var(--brand); }
+.pub { display: flex; align-items: center; gap: 10px; margin-top: 14px; }
+.avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--brand); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; }
+.pub small { display: block; color: var(--muted); }
+.dbar { position: sticky; bottom: 0; display: flex; gap: 8px; align-items: center; background: var(--card); border-top: 1px solid var(--line); padding: 10px 14px; padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px)); }
+.dbar .btn { flex: 1; }
+.favbtn { flex: none; width: 50px; border: 0; background: none; font-size: 22px; color: var(--muted); display: flex; flex-direction: column; align-items: center; }
+.favbtn small { font-size: 11px; }
+.favbtn.on { color: #e5484d; }
+
+/* sheet */
+#sheet { position: fixed; inset: 0; z-index: 40; display: none; background: rgba(15,8,16,.55); }
+#sheet.show { display: block; }
+.sheet { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 560px; background: var(--card); border-radius: 18px 18px 0 0; padding: 16px; padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px)); max-height: 86vh; overflow-y: auto; }
+.sh { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.sh b { font-family: "Fraunces", Georgia, serif; font-size: 19px; }
+.x { border: 0; background: var(--chip); border-radius: 50%; width: 32px; height: 32px; font-size: 16px; }
+.sheet p { margin: 8px 0; line-height: 1.6; }
+.sheet ul { margin: 6px 0; padding-left: 20px; line-height: 1.65; }
+
+/* forms */
+.form { max-width: 640px; margin: 0 auto; padding: 14px; }
+.form h1 { margin: 4px 0 12px; font-family: "Fraunces", Georgia, serif; font-size: 24px; font-weight: 600; }
+.fld { margin-bottom: 12px; }
+.fld .t { display: block; font-size: 13px; color: var(--muted); margin-bottom: 4px; font-weight: 600; }
+input[type=text], input[type=number], input[type=tel], input[type=search], select, textarea { width: 100%; border: 1px solid var(--line); background: var(--card); border-radius: 10px; padding: 10px 12px; }
+textarea { min-height: 110px; resize: vertical; }
+input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px solid var(--brand); border-color: var(--brand); }
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.three { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.checks { display: flex; flex-wrap: wrap; gap: 8px; }
+.checks label { display: inline-flex; align-items: center; gap: 6px; background: var(--chip); border-radius: 16px; padding: 4px 12px; font-size: 14px; }
+.checks input { accent-color: var(--brand); }
+.hint { font-size: 12.5px; color: var(--muted); margin-top: 4px; }
+.seg { display: flex; background: var(--chip); border-radius: 12px; padding: 3px; margin-bottom: 14px; }
+.seg button { flex: 1; border: 0; background: none; padding: 8px 0; border-radius: 10px; font-weight: 600; font-size: 14px; }
+.seg button.on { background: var(--brand); color: #fff; }
+.err { color: var(--danger); font-size: 14px; min-height: 22px; margin-bottom: 6px; font-weight: 600; }
+.prev { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+.prev div { position: relative; width: 78px; height: 78px; }
+.prev img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; }
+.prev button { position: absolute; top: -6px; right: -6px; width: 24px; height: 24px; border-radius: 50%; border: 0; background: var(--danger); color: #fff; font-size: 13px; }
+.sec { padding: 14px 14px 4px; font-weight: 700; font-size: 17px; }
+.mine-act { padding: 0 14px 12px; }
+#toast { position: fixed; left: 50%; bottom: 100px; transform: translateX(-50%); background: rgba(30,18,32,.94); color: #fff; padding: 10px 18px; border-radius: 22px; font-size: 14px; z-index: 60; display: none; max-width: 88%; text-align: center; }
+#toast.show { display: block; }
+.demo { margin: 10px 14px 0; padding: 8px 12px; border-radius: 10px; background: var(--brand-soft); color: var(--brand); font-size: 13px; }
+
+.city { max-width: 40%; }
+.acct { flex: none; border: 0; background: var(--brand); color: #fff; border-radius: 18px; padding: 7px 14px; font-weight: 700; font-size: 14px; }
+.acct.in { width: 36px; height: 36px; padding: 0; border-radius: 50%; font-size: 16px; }
+.acct:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
+.stb { position: absolute; left: 10px; top: 40px; z-index: 1; font-size: 12px; font-weight: 700; padding: 2px 10px; border-radius: 12px; background: var(--ink); color: var(--card); }
+input[type=password] { width: 100%; border: 1px solid var(--line); background: var(--card); border-radius: 10px; padding: 10px 12px; }
+input[type=password]:focus-visible { outline: 2px solid var(--brand); border-color: var(--brand); }
+.btn.off { opacity: .55; pointer-events: none; }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.4/dist/umd/supabase.js"></script>
+<script>if(!window.supabase){document.write('<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.js"><\/script>');}</script>
+</head>
+<body>
+<header class="top" id="top">
+  <div class="wrap">
+    <div class="bar">
+      <div class="logo"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M3 15 16 4l13 11" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M7 14v13h18V14" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/><path d="M13 27v-7h6v7" fill="currentColor"/></svg>Techo</div>
+      <select class="city" id="city" aria-label="Ciudad">
+        <option value="all">Toda Bolivia</option><option>La Paz</option><option>El Alto</option><option>Santa Cruz</option><option>Cochabamba</option>
+      </select>
+      <span class="ptitle" id="ptitle"></span>
+      <button class="acct" id="acct" data-act="acct" type="button">Ingresar</button>
+    </div>
+    <div class="searchrow"><input class="search" id="search" type="search" placeholder="Busca por zona, barrio o palabra clave" aria-label="Buscar"></div>
+    <div class="tabs" id="tabs">
+      <button class="tab on" data-op="todos">Todos</button>
+      <button class="tab" data-op="alquiler">Alquiler</button>
+      <button class="tab" data-op="anticretico">Anticrético</button>
+      <button class="tab" data-op="venta">Venta</button>
+    </div>
+  </div>
+</header>
+<div class="filters"><div class="wrap" id="filters"></div></div>
+<main><div class="wrap" id="main"></div></main>
+<nav class="nav" aria-label="Navegación principal"><div class="in">
+  <button data-tab="home" class="on"><span>⌂</span>Inicio</button>
+  <button data-tab="post" class="plus"><span>＋</span>Publicar</button>
+  <button data-tab="favs"><span>♡</span>Favoritos</button>
+  <button data-tab="mine"><span>☺</span>Mis anuncios</button>
+</div></nav>
+<div id="detail"></div>
+<div id="sheet"><div class="sheet" id="sheetBody"></div></div>
+<div id="toast" role="status"></div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ============ Configuración (solo datos PÚBLICOS; nunca pongas aquí la secret key) ============ */
+  var CONFIG = {
+    SUPABASE_URL: "https://dvnfawggcpvjvaxlvtkp.supabase.co",
+    SUPABASE_KEY: "sb_publishable_1nUVRaz05XCTTUsyhMd2NA_7UXBiXsF",
+    BUCKET: "listing-images",
+    MAX_LOAD: 200
+  };
+  var DEMO = /[?&]demo=1(&|$)/.test(location.search); // añade ?demo=1 a la dirección para ver anuncios de ejemplo
+
+  var $ = function (id) { return document.getElementById(id); };
+  var esc = function (s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); };
+  var RATE = 6.96; // tipo de cambio referencial Bs por USD
+  var OPN = { alquiler: "Alquiler", anticretico: "Anticrético", venta: "Venta" };
+  var EMO = { "Departamento": "🏢", "Casa": "🏡", "Habitación": "🛏️", "Local": "🏪" };
+  var TIPO_LABEL = { departamento: "Departamento", casa: "Casa", habitacion: "Habitación", local: "Local" };
+  var TIPO_KEY = { "Departamento": "departamento", "Casa": "casa", "Habitación": "habitacion", "Local": "local" };
+  var RMAP = { "Parece una estafa": "estafa", "El inmueble ya no está disponible": "no_disponible", "Información falsa o fotos que no corresponden": "info_falsa", "Contenido inapropiado": "inapropiado", "Otro motivo": "otro" };
+  var MIN = 60000, HOUR = 3600000, DAY = 86400000;
+  var PHONE_RE = /^[67][0-9]{7}$/;
+  var EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  var seed = [
+    { id: "a1", op: "alquiler", tipo: "Departamento", title: "Departamento luminoso en Sopocachi, cerca de la Plaza Avaroa", city: "La Paz", zona: "Sopocachi", price: 2800, cur: "BOB", dorm: 2, banos: 1, m2: 68, amoblado: false, mascotas: true, garaje: false, hue: 330, by: "Marcela R.", ago: 25 * MIN, desc: "Departamento en tercer piso con mucha luz natural, cocina equipada, living-comedor amplio y lavandería. A pasos de restaurantes, farmacias y transporte. Se aceptan mascotas pequeñas.\nContrato de 1 año. Garantía de un mes." },
+    { id: "a2", op: "alquiler", tipo: "Departamento", title: "Amplio departamento en Calacoto con garaje y seguridad 24 h", city: "La Paz", zona: "Calacoto", price: 650, cur: "USD", dorm: 3, banos: 2, m2: 120, amoblado: false, mascotas: false, garaje: true, hue: 210, by: "Inmobiliaria Cumbre", ago: 3 * HOUR, desc: "Edificio con portería y seguridad las 24 horas, ascensor y área social. Tres dormitorios (uno en suite), cocina con mesón, balcón y garaje techado.\nMantenimiento aparte. Contrato de 2 años." },
+    { id: "a3", op: "anticretico", tipo: "Departamento", title: "Anticrético: departamento de 2 dormitorios en Miraflores", city: "La Paz", zona: "Miraflores", price: 28000, cur: "USD", dorm: 2, banos: 1, m2: 85, amoblado: false, mascotas: true, garaje: false, hue: 28, by: "Roberto C.", ago: 7 * HOUR, desc: "Departamento remodelado, cerca de hospitales y universidades. Piso de parquet, cocina independiente y ambiente para escritorio.\nEl monto es único y se devuelve íntegro al terminar el contrato. Plazo de 2 años. Contrato ante notario." },
+    { id: "a4", op: "venta", tipo: "Casa", title: "Casa familiar de 4 dormitorios en Obrajes con jardín", city: "La Paz", zona: "Obrajes", price: 165000, cur: "USD", dorm: 4, banos: 3, m2: 220, amoblado: false, mascotas: true, garaje: true, hue: 140, by: "Familia Quispe", ago: 1 * DAY + 2 * HOUR, desc: "Casa de dos plantas con jardín, garaje para dos autos, estudio y cuarto de servicio. Zona tranquila, cerca de colegios.\nDocumentación al día y folio real disponible. Se aceptan visitas con cita previa." },
+    { id: "a5", op: "alquiler", tipo: "Departamento", title: "Departamento de 2 dormitorios en Ciudad Satélite", city: "El Alto", zona: "Ciudad Satélite", price: 1300, cur: "BOB", dorm: 2, banos: 1, m2: 70, amoblado: false, mascotas: false, garaje: false, hue: 190, by: "Juan M.", ago: 1 * DAY + 6 * HOUR, desc: "Departamento en primer piso, con agua y gas por red. Buen acceso al transporte hacia La Paz. Ideal para familia pequeña." },
+    { id: "a6", op: "anticretico", tipo: "Casa", title: "Casa de 3 dormitorios en anticrético, Villa Adela", city: "El Alto", zona: "Villa Adela", price: 14000, cur: "USD", dorm: 3, banos: 2, m2: 150, amoblado: false, mascotas: true, garaje: true, hue: 45, by: "Doña Elena", ago: 2 * DAY, desc: "Casa con patio y garaje, tres dormitorios y dos baños. Cerca de mercado y colegios. Plazo mínimo de un año. Se prefiere familia." },
+    { id: "a7", op: "alquiler", tipo: "Departamento", title: "Monoambiente amoblado en Equipetrol, listo para vivir", city: "Santa Cruz", zona: "Equipetrol", price: 550, cur: "USD", dorm: 1, banos: 1, m2: 52, amoblado: true, mascotas: false, garaje: true, hue: 175, by: "Andrea V.", ago: 2 * DAY + 4 * HOUR, desc: "Dormitorio en suite, cocina integrada, aire acondicionado, internet de fibra incluido. Edificio con piscina y gimnasio.\nIncluye garaje cubierto." },
+    { id: "a8", op: "venta", tipo: "Departamento", title: "Departamento de 3 dormitorios en Urbarí, edificio nuevo", city: "Santa Cruz", zona: "Urbarí", price: 98000, cur: "USD", dorm: 3, banos: 2, m2: 110, amoblado: false, mascotas: true, garaje: true, hue: 265, by: "Constructora Oriente", ago: 3 * DAY, desc: "Edificio de estreno, con áreas verdes, churrasquera y seguridad. Acabados de primera, cocina con mesón de granito.\nFacilidades de pago con entidades financieras." },
+    { id: "a9", op: "alquiler", tipo: "Local", title: "Local comercial sobre avenida Beni, ideal para tienda o consultorio", city: "Santa Cruz", zona: "Av. Beni", price: 5500, cur: "BOB", dorm: 0, banos: 1, m2: 60, amoblado: false, mascotas: false, garaje: false, hue: 18, by: "Pedro L.", ago: 3 * DAY + 5 * HOUR, desc: "Local con vitrina a la calle, baño propio y depósito. Alto tránsito peatonal y vehicular. Se solicita garantía de dos meses." },
+    { id: "a10", op: "alquiler", tipo: "Habitación", title: "Habitación amoblada con baño privado en Cala Cala", city: "Cochabamba", zona: "Cala Cala", price: 800, cur: "BOB", dorm: 0, banos: 1, m2: 18, amoblado: true, mascotas: false, garaje: false, hue: 300, by: "Carmen S.", ago: 4 * DAY, desc: "Habitación en casa tranquila, con cama, ropero y escritorio. Cocina y lavandería compartidas. Internet incluido. Preferible estudiante o profesional." },
+    { id: "a11", op: "anticretico", tipo: "Departamento", title: "Anticrético de departamento en Queru Queru, 2 dormitorios", city: "Cochabamba", zona: "Queru Queru", price: 17000, cur: "USD", dorm: 2, banos: 2, m2: 90, amoblado: false, mascotas: true, garaje: true, hue: 90, by: "Luis A.", ago: 4 * DAY + 8 * HOUR, desc: "Departamento con garaje, cocina equipada y balcón. Zona residencial y segura. Plazo de dos años, devolución del monto total al finalizar." },
+    { id: "a12", op: "venta", tipo: "Casa", title: "Casa de 3 dormitorios en Sarco, esquina con jardín", city: "Cochabamba", zona: "Sarco", price: 120000, cur: "USD", dorm: 3, banos: 2, m2: 180, amoblado: false, mascotas: true, garaje: true, hue: 15, by: "Familia Rojas", ago: 5 * DAY, desc: "Casa en esquina con amplio jardín, churrasquera y cuarto de herramientas. Cerca de colegios y áreas verdes. Papeles en regla." }
+  ];
+
+
+  /* ============ Cliente de Supabase ============ */
+  var sb = null;
+  if (window.supabase && window.supabase.createClient) {
+    sb = window.supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_KEY, {
+      auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
+    });
+  }
+
+  /* ============ Estado ============ */
+  var S = {
+    tab: "home", op: "todos", city: "all", q: "", delArm: null, detail: null, photos: [], postOp: "alquiler",
+    user: null, profile: null, loading: true, loadError: null, busy: false, authMode: "login",
+    favIds: {}, favItems: [], favLoading: false, mineItems: [], mineLoading: false,
+    f: { tipo: "todos", dorm: "any", amoblado: false, mascotas: false, garaje: false, sort: "new", cur: "orig" }
+  };
+  var cache = {};     // id -> anuncio (de cualquier lista)
+  var items = [];     // anuncios publicados (inicio)
+  var contacts = {};  // id -> "loading" | null | {display_name, whatsapp}
+
+  function isMine(it) { return !!(S.user && it && it.ownerId && it.ownerId === S.user.id); }
+  function hueOf(id) { var h = 0; for (var i = 0; i < id.length; i++) h = (h * 31 + id.charCodeAt(i)) >>> 0; return h % 360; }
+  function pubUrl(path) { return sb.storage.from(CONFIG.BUCKET).getPublicUrl(path).data.publicUrl; }
+
+  function fromRow(r) {
+    var imgs = (r.property_images || []).slice().sort(function (a, b) { return a.position - b.position; });
+    var it = {
+      id: r.id, ownerId: r.owner_id, op: r.operation, tipo: TIPO_LABEL[r.property_type] || "Departamento",
+      title: r.title, desc: r.description, city: r.city, zona: r.zone, price: Number(r.price), cur: r.currency,
+      dorm: r.bedrooms, banos: r.bathrooms, m2: Number(r.area_m2), amoblado: r.furnished, mascotas: r.pets_allowed, garaje: r.has_garage,
+      status: r.status, by: r.seller_name, createdAt: Date.parse(r.created_at), hue: hueOf(r.id), demo: false,
+      photos: imgs.map(function (i) { return pubUrl(i.path); }), paths: imgs.map(function (i) { return i.path; })
+    };
+    cache[it.id] = it;
+    return it;
+  }
+  function demoItems() {
+    var now = Date.now();
+    return seed.map(function (s) {
+      var c = {}; for (var k in s) c[k] = s[k];
+      c.createdAt = now - s.ago; c.demo = true; c.photos = []; c.paths = []; c.status = "published";
+      cache[c.id] = c; return c;
+    });
+  }
+
+  /* ============ Utilidades ============ */
+  function ago(ts) {
+    var d = Date.now() - ts;
+    if (d < MIN) return "ahora mismo";
+    if (d < HOUR) return "hace " + Math.floor(d / MIN) + " min";
+    if (d < DAY) return "hace " + Math.floor(d / HOUR) + " h";
+    var n = Math.floor(d / DAY);
+    return n === 1 ? "ayer" : "hace " + n + " días";
+  }
+  function fmt(n) { return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, "."); }
+  function usd(it) { return it.cur === "USD" ? it.price : it.price / RATE; }
+  function priceInfo(it) {
+    var v = it.price, c = it.cur, conv = false, m = S.f.cur;
+    if (m === "BOB" && c === "USD") { v = v * RATE; c = "BOB"; conv = true; }
+    else if (m === "USD" && c === "BOB") { v = v / RATE; c = "USD"; conv = true; }
+    return (conv ? "≈ " : "") + (c === "USD" ? "USD " : "Bs ") + fmt(v);
+  }
+  function suffix(it) { return it.op === "alquiler" ? "/mes" : it.op === "anticretico" ? " pago único" : ""; }
+  function toast(msg) { var t = $("toast"); t.textContent = msg; t.className = "show"; clearTimeout(toast.t); toast.t = setTimeout(function () { t.className = ""; }, 3000); }
+  function uuid() {
+    if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+    return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) { var r = Math.random() * 16 | 0; return (c === "x" ? r : (r & 3 | 8)).toString(16); });
+  }
+  function dataUrlToBlob(d) {
+    var p = d.split(","), mime = /:(.*?);/.exec(p[0])[1], bin = atob(p[1]), n = bin.length, u = new Uint8Array(n);
+    while (n--) u[n] = bin.charCodeAt(n);
+    return new Blob([u], { type: mime });
+  }
+  function fe(e) {
+    var m = (e && e.message) || String(e || "");
+    if (/Límite diario/i.test(m)) return "Alcanzaste el límite de 10 anuncios por día.";
+    if (/row-level security|violates row-level/i.test(m)) return "No se pudo guardar. Verifica que tu cuenta tenga un WhatsApp válido y que no esté suspendida.";
+    if (/check constraint|violates check/i.test(m)) return "Revisa los datos: título (mín. 5 caracteres), descripción (mín. 20) y los números deben ser válidos.";
+    if (/Failed to fetch|NetworkError|network/i.test(m)) return "Sin conexión. Revisa tu internet e inténtalo de nuevo.";
+    return "Ocurrió un error: " + m;
+  }
+  function authErr(e) {
+    var m = (e && e.message) || "";
+    if (/Invalid login/i.test(m)) return "Correo o contraseña incorrectos.";
+    if (/already registered|already been registered/i.test(m)) return "Ese correo ya tiene una cuenta. Prueba ingresar.";
+    if (/Email not confirmed/i.test(m)) return "Debes confirmar tu correo antes de ingresar.";
+    if (/rate limit|too many|security purposes/i.test(m)) return "Demasiados intentos. Espera unos minutos.";
+    if (/Password should|weak/i.test(m)) return "La contraseña es demasiado débil.";
+    if (/Failed to fetch|NetworkError|network/i.test(m)) return "Sin conexión. Revisa tu internet.";
+    return "No se pudo completar: " + m;
+  }
+
+  /* ============ Carga de datos ============ */
+  var SELECT = "*, property_images(path, position)";
+
+  function loadListings() {
+    if (!sb) { S.loading = false; S.loadError = "No se pudo cargar el servicio de datos. Recarga la página."; items = DEMO ? demoItems() : []; refreshView(); return Promise.resolve(); }
+    S.loading = true; S.loadError = null; refreshView();
+    return sb.from("properties").select(SELECT).eq("status", "published").order("created_at", { ascending: false }).limit(CONFIG.MAX_LOAD)
+      .then(function (r) {
+        S.loading = false;
+        if (r.error) { S.loadError = "No se pudieron cargar los anuncios."; items = []; }
+        else items = r.data.map(fromRow);
+        if (DEMO) items = items.concat(demoItems());
+        refreshView();
+      }, function () { S.loading = false; S.loadError = "No se pudieron cargar los anuncios."; refreshView(); });
+  }
+  function loadProfile() {
+    var uid = S.user.id;
+    return sb.from("profiles").select("display_name, whatsapp").eq("id", uid).maybeSingle().then(function (r) {
+      if (r.error || !S.user || S.user.id !== uid) return;
+      if (r.data) { S.profile = r.data; chrome(); return; }
+      var nm = String(S.user.email || "Usuario").split("@")[0].slice(0, 40) || "Usuario";
+      return sb.from("profiles").insert({ id: uid, display_name: nm }).select("display_name, whatsapp").single().then(function (r2) {
+        if (!r2.error && S.user && S.user.id === uid) { S.profile = r2.data; chrome(); }
+      });
+    });
+  }
+  function loadFavIds() {
+    return sb.from("favorites").select("property_id").not("property_id", "is", null).then(function (r) {
+      if (r.error || !S.user) return;
+      S.favIds = {}; r.data.forEach(function (x) { S.favIds[x.property_id] = 1; });
+      refreshView();
+    });
+  }
+  function loadFavItems() {
+    S.favLoading = true; refreshView();
+    return sb.from("favorites").select("property_id, properties(" + SELECT + ")").not("property_id", "is", null).order("created_at", { ascending: false }).then(function (r) {
+      S.favLoading = false;
+      if (!r.error) S.favItems = r.data.filter(function (x) { return x.properties; }).map(function (x) { return fromRow(x.properties); });
+      refreshView();
+    });
+  }
+  function loadMine() {
+    S.mineLoading = true; refreshView();
+    return sb.from("properties").select(SELECT).eq("owner_id", S.user.id).order("created_at", { ascending: false }).then(function (r) {
+      S.mineLoading = false;
+      if (!r.error) S.mineItems = r.data.map(fromRow);
+      refreshView();
+    });
+  }
+
+  /* ============ Sesión ============ */
+  function applyUser(u) {
+    var id = u ? u.id : null, old = S.user ? S.user.id : null;
+    S.user = u;
+    if (id === old) return;
+    S.profile = null; S.favIds = {}; S.favItems = []; S.mineItems = []; contacts = {};
+    chrome();
+    if (u) { loadProfile().then(loadFavIds); if (S.tab === "favs") loadFavItems(); if (S.tab === "mine") loadMine(); }
+    if (S.tab === "post") render(); else refreshView();
+    if (S.detail) { redrawDetail(); ensureContact(S.detail); }
+  }
+  if (sb) {
+    sb.auth.onAuthStateChange(function (ev, session) {
+      setTimeout(function () {
+        applyUser(session ? session.user : null);
+        if (ev === "PASSWORD_RECOVERY") openNewPassword();
+      }, 0);
+    });
+    sb.auth.getSession().then(function (r) { applyUser(r.data && r.data.session ? r.data.session.user : null); });
+  }
+
+  /* ============ Listado ============ */
+  function filtered() {
+    var f = S.f, q = S.q.trim().toLowerCase();
+    var l = items.slice();
+    if (S.op !== "todos") l = l.filter(function (i) { return i.op === S.op; });
+    if (S.city !== "all") l = l.filter(function (i) { return i.city === S.city; });
+    if (f.tipo !== "todos") l = l.filter(function (i) { return i.tipo === f.tipo; });
+    if (f.dorm !== "any") l = l.filter(function (i) { return f.dorm === "3" ? i.dorm >= 3 : i.dorm === parseInt(f.dorm, 10); });
+    if (f.amoblado) l = l.filter(function (i) { return i.amoblado; });
+    if (f.mascotas) l = l.filter(function (i) { return i.mascotas; });
+    if (f.garaje) l = l.filter(function (i) { return i.garaje; });
+    if (q) l = l.filter(function (i) { return (i.title + " " + i.zona + " " + i.city + " " + i.desc + " " + i.tipo).toLowerCase().indexOf(q) >= 0; });
+    if (f.sort === "low") l.sort(function (a, b) { return usd(a) - usd(b); });
+    else if (f.sort === "high") l.sort(function (a, b) { return usd(b) - usd(a); });
+    else l.sort(function (a, b) { return b.createdAt - a.createdAt; });
+    return l;
+  }
+  function chip(key, val, label, on) { return '<button class="chip' + (on ? " on" : "") + '" data-f="' + key + '" data-v="' + esc(val) + '">' + esc(label) + "</button>"; }
+  function filterBar() {
+    var f = S.f, h = "";
+    h += '<div class="frow"><span class="flab">Tipo</span>' + [["todos", "Todos"], ["Departamento", "Departamento"], ["Casa", "Casa"], ["Habitación", "Habitación"], ["Local", "Local"]].map(function (p) { return chip("tipo", p[0], p[1], f.tipo === p[0]); }).join("") + "</div>";
+    h += '<div class="frow"><span class="flab">Dorm.</span>' + [["any", "Cualquiera"], ["1", "1"], ["2", "2"], ["3", "3 o más"]].map(function (p) { return chip("dorm", p[0], p[1], f.dorm === p[0]); }).join("") +
+      '<button class="chip' + (f.amoblado ? " on" : "") + '" data-toggle="amoblado">Amoblado</button><button class="chip' + (f.mascotas ? " on" : "") + '" data-toggle="mascotas">Mascotas</button><button class="chip' + (f.garaje ? " on" : "") + '" data-toggle="garaje">Garaje</button></div>';
+    h += '<div class="frow"><span class="flab">Orden</span>' + [["new", "Más recientes"], ["low", "Menor precio"], ["high", "Mayor precio"]].map(function (p) { return chip("sort", p[0], p[1], f.sort === p[0]); }).join("") +
+      '<span class="flab">Moneda</span>' + [["orig", "Original"], ["BOB", "Bs"], ["USD", "USD"]].map(function (p) { return chip("cur", p[0], p[1], f.cur === p[0]); }).join("") + "</div>";
+    return h;
+  }
+  function specs(it) {
+    var p = [];
+    if (it.dorm > 0) p.push(it.dorm + " dorm.");
+    if (it.banos > 0) p.push(it.banos + (it.banos > 1 ? " baños" : " baño"));
+    if (it.m2) p.push(it.m2 + " m²");
+    return p.join(" · ");
+  }
+  function phHTML(it) {
+    var img = it.photos && it.photos[0] ? '<img loading="lazy" alt="Foto de ' + esc(it.title) + '" src="' + esc(it.photos[0]) + '">' : "";
+    return '<div class="ph" style="--h:' + it.hue + '">' + (img ? "" : EMO[it.tipo] || "🏠") + img;
+  }
+  function cardHTML(it) {
+    var fav = S.favIds[it.id];
+    var tags = [it.tipo]; if (it.amoblado) tags.push("Amoblado"); if (it.mascotas) tags.push("Acepta mascotas"); if (it.garaje) tags.push("Garaje");
+    var st = it.status === "closed" ? "Cerrado" : it.status === "hidden_by_admin" ? "Oculto por moderación" : "";
+    return '<article class="card" role="button" tabindex="0" data-open="' + esc(it.id) + '">' + phHTML(it) +
+      '<span class="opb ' + it.op + '">' + OPN[it.op] + "</span>" + (st ? '<span class="stb">' + st + "</span>" : "") +
+      '<button class="fav' + (fav ? " on" : "") + '" data-fav="' + esc(it.id) + '" aria-label="' + (fav ? "Quitar de favoritos" : "Guardar en favoritos") + '">' + (fav ? "♥" : "♡") + "</button></div>" +
+      '<div class="cb"><div class="pr ' + it.op + '">' + priceInfo(it) + "<small>" + suffix(it) + "</small></div><h3>" + esc(it.title) + '</h3><div class="loc">📍 ' + esc(it.zona) + ", " + esc(it.city) + " · " + ago(it.createdAt) + '</div><div class="sp">' + esc(specs(it)) + '</div><div class="tg">' + tags.map(function (t) { return '<span class="tag">' + esc(t) + "</span>"; }).join("") + "</div></div></article>";
+  }
+  function gate(msg) {
+    return '<div class="empty"><div class="big">🔐</div><p>' + msg + '</p><button class="btn small" data-act="goto-auth" data-mode="login">Ingresar</button> <button class="btn small ghost" data-act="goto-auth" data-mode="signup">Crear cuenta</button></div>';
+  }
+
+  /* ============ Vistas ============ */
+  function renderHome() {
+    $("filters").innerHTML = filterBar();
+    var h = '<div class="hello"><h1>' + (S.op === "todos" ? "Encuentra tu próximo hogar" : OPN[S.op] + " en " + (S.city === "all" ? "Bolivia" : esc(S.city))) + '</h1><span><button class="linkbtn" data-act="info-ant">¿Qué es el anticrético?</button> · <button class="linkbtn" data-act="info-safe">Consejos de seguridad</button></span></div>';
+    if (DEMO) h += '<div class="demo">Modo demostración: los anuncios marcados como ejemplo no son reales.</div>';
+    if (S.loading) { $("main").innerHTML = h + '<div class="empty"><div class="big">⏳</div><p>Cargando anuncios…</p></div>'; return; }
+    if (S.loadError) { $("main").innerHTML = h + '<div class="empty"><div class="big">📡</div><p>' + esc(S.loadError) + '</p><button class="btn small" data-act="reload">Reintentar</button></div>'; return; }
+    var l = filtered();
+    h += '<div class="count">' + l.length + (l.length === 1 ? " anuncio" : " anuncios") + (S.f.cur !== "orig" ? " · tipo de cambio referencial: Bs " + String(RATE).replace(".", ",") + " por USD" : "") + "</div>";
+    if (!items.length) h += '<div class="empty"><div class="big">🏠</div><p>Todavía no hay anuncios.<br>¡Sé el primero en publicar!</p><button class="btn small" data-tab="post">Publicar un anuncio</button></div>';
+    else if (!l.length) h += '<div class="empty"><div class="big">🔍</div><p>No encontramos anuncios con estos filtros.</p><button class="btn small" data-act="clear">Quitar filtros</button></div>';
+    else h += '<div class="grid">' + l.map(cardHTML).join("") + "</div>";
+    $("main").innerHTML = h;
+  }
+  function renderFavs() {
+    $("filters").innerHTML = "";
+    if (!S.user) { $("main").innerHTML = gate("Ingresa para guardar y ver tus favoritos."); return; }
+    var l = S.favItems.filter(function (i) { return S.favIds[i.id]; });
+    if (S.favLoading && !l.length) { $("main").innerHTML = '<div class="empty"><p>Cargando…</p></div>'; return; }
+    $("main").innerHTML = l.length ? '<div class="sec">Tus favoritos (' + l.length + ')</div><div class="grid">' + l.map(cardHTML).join("") + "</div>" :
+      '<div class="empty"><div class="big">♡</div><p>Aún no has guardado ningún anuncio.<br>Toca el corazón para guardarlos aquí.</p><button class="btn small" data-tab="home">Ver anuncios</button></div>';
+  }
+  function renderMine() {
+    $("filters").innerHTML = "";
+    if (!S.user) { $("main").innerHTML = gate("Ingresa para ver y administrar tus anuncios."); return; }
+    var l = S.mineItems;
+    if (S.mineLoading && !l.length) { $("main").innerHTML = '<div class="empty"><p>Cargando…</p></div>'; return; }
+    var h = '<div class="sec">Mis anuncios (' + l.length + ")</div>";
+    if (!l.length) h += '<div class="empty"><div class="big">🏠</div><p>Todavía no publicaste nada.<br>Publicar es gratis y toma unos minutos.</p><button class="btn small" data-tab="post">Publicar un anuncio</button></div>';
+    else h += '<div class="grid">' + l.map(function (i) {
+      var tg = i.status === "hidden_by_admin" ? "" : '<button class="btn ghost small" data-act="toggle-status" data-id="' + esc(i.id) + '">' + (i.status === "closed" ? "Volver a publicar" : "Marcar como cerrado") + "</button> ";
+      return "<div>" + cardHTML(i) + '<div class="mine-act">' + tg + '<button class="btn danger small" data-act="del" data-id="' + esc(i.id) + '">' + (S.delArm === i.id ? "Toca otra vez para eliminar" : "Eliminar") + "</button></div></div>";
+    }).join("") + "</div>";
+    $("main").innerHTML = h;
+  }
+
+  /* ============ Publicar ============ */
+  function fld(label, inner, hint) { return '<div class="fld"><label class="t">' + label + "</label>" + inner + (hint ? '<div class="hint">' + hint + "</div>" : "") + "</div>"; }
+  function opts(a, sel) { return a.map(function (o) { return "<option" + (o === sel ? " selected" : "") + ">" + esc(o) + "</option>"; }).join(""); }
+  function numOpts(max, sel) { var o = []; for (var i = 0; i <= max; i++) o.push('<option value="' + i + '"' + (i === sel ? " selected" : "") + ">" + i + "</option>"); return o.join(""); }
+  function renderPost() {
+    $("filters").innerHTML = "";
+    S.photos = []; S.postOp = "alquiler";
+    if (!S.user) { $("main").innerHTML = gate("Para publicar un anuncio necesitas una cuenta gratuita."); return; }
+    var wa = S.profile && S.profile.whatsapp ? S.profile.whatsapp : "";
+    $("main").innerHTML = '<div class="form"><h1>Publica tu anuncio</h1>' +
+      '<div class="seg" id="opSeg"><button data-postop="alquiler" class="on">Alquiler</button><button data-postop="anticretico">Anticrético</button><button data-postop="venta">Venta</button></div>' +
+      fld("Título", '<input type="text" id="p_title" maxlength="80" placeholder="Ej.: Departamento de 2 dormitorios en Sopocachi">') +
+      '<div class="two">' + fld("Tipo de inmueble", '<select id="p_tipo">' + opts(["Departamento", "Casa", "Habitación", "Local"]) + "</select>") +
+      fld("Ciudad", '<select id="p_city">' + opts(["La Paz", "El Alto", "Santa Cruz", "Cochabamba"]) + "</select>") + "</div>" +
+      fld("Zona o barrio", '<input type="text" id="p_zona" maxlength="40" placeholder="Ej.: Sopocachi">') +
+      '<div class="two">' + fld('<span id="priceLab">Precio mensual</span>', '<input type="number" id="p_price" inputmode="decimal" min="1" placeholder="Ej.: 2800">') +
+      fld("Moneda", '<select id="p_cur"><option value="BOB">Bolivianos (Bs)</option><option value="USD">Dólares (USD)</option></select>') + "</div>" +
+      '<div class="hint" id="priceHint" style="margin:-6px 0 12px">Ingresa el alquiler por mes.</div>' +
+      '<div class="three">' + fld("Dormitorios", '<select id="p_dorm">' + numOpts(8, 1) + "</select>") + fld("Baños", '<select id="p_banos">' + numOpts(6, 1) + "</select>") + fld("Superficie (m²)", '<input type="number" id="p_m2" inputmode="numeric" min="1" placeholder="65">') + "</div>" +
+      fld("Características", '<div class="checks"><label><input type="checkbox" id="p_amoblado">Amoblado</label><label><input type="checkbox" id="p_mascotas">Acepta mascotas</label><label><input type="checkbox" id="p_garaje">Garaje</label></div>') +
+      fld("Descripción", '<textarea id="p_desc" maxlength="2000" placeholder="Estado del inmueble, servicios, plazo del contrato, requisitos, garantía..."></textarea>', "Mínimo 20 caracteres.") +
+      fld("Fotos (hasta 4)", '<input type="file" id="p_photos" accept="image/*" multiple><div class="prev" id="photoPrev"></div>', "Las fotos reales de tu inmueble generan más contactos.") +
+      fld("Tu número de WhatsApp", '<input type="tel" id="p_phone" inputmode="numeric" maxlength="8" value="' + esc(wa) + '" placeholder="8 dígitos, ej.: 71234567">', "Solo lo verán usuarios registrados al abrir tu anuncio. Ingresa los 8 dígitos, sin +591.") +
+      '<div class="fld"><div class="checks"><label><input type="checkbox" id="p_ok">Confirmo que soy el propietario o tengo autorización para publicar este inmueble.</label></div></div>' +
+      '<div class="err" id="formErr"></div><button class="btn block" id="postBtn" data-act="submit-post">Publicar anuncio</button></div>';
+  }
+  function setPostOp(op) {
+    S.postOp = op;
+    Array.prototype.forEach.call(document.querySelectorAll("#opSeg button"), function (b) { b.className = b.getAttribute("data-postop") === op ? "on" : ""; });
+    $("priceLab").textContent = op === "alquiler" ? "Precio mensual" : op === "anticretico" ? "Monto del anticrético" : "Precio de venta";
+    $("priceHint").textContent = op === "alquiler" ? "Ingresa el alquiler por mes." : op === "anticretico" ? "Ingresa el monto único que el inquilino entrega y que se devuelve al terminar el contrato." : "Ingresa el precio total de venta.";
+  }
+  function drawPhotos() {
+    var box = $("photoPrev"); if (!box) return;
+    box.innerHTML = S.photos.map(function (p, i) { return '<div><img alt="Foto ' + (i + 1) + '" src="' + p + '"><button type="button" data-rmphoto="' + i + '" aria-label="Quitar foto ' + (i + 1) + '">✕</button></div>'; }).join("");
+  }
+  function addPhotos(files) {
+    var room = 4 - S.photos.length;
+    Array.prototype.slice.call(files, 0, room).forEach(function (f) {
+      if (!/^image\//.test(f.type)) return;
+      var r = new FileReader();
+      r.onload = function () {
+        var img = new Image();
+        img.onload = function () {
+          var sc = Math.min(1, 1000 / Math.max(img.width, img.height)), c = document.createElement("canvas");
+          c.width = Math.round(img.width * sc); c.height = Math.round(img.height * sc);
+          c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+          if (S.photos.length < 4) { S.photos.push(c.toDataURL("image/jpeg", 0.75)); drawPhotos(); }
+        };
+        img.src = r.result;
+      };
+      r.readAsDataURL(f);
+    });
+  }
+  async function submitPost() {
+    if (S.busy || !S.user) return;
+    var v = function (id) { return $(id).value.trim(); }, err = function (m) { $("formErr").textContent = m; };
+    err("");
+    var title = v("p_title"), zona = v("p_zona"), desc = v("p_desc"), phone = v("p_phone");
+    if (title.length < 5) return err("El título debe tener al menos 5 caracteres.");
+    if (zona.length < 2) return err("Indica la zona o barrio.");
+    var price = parseFloat(v("p_price")); if (isNaN(price) || price <= 0) return err("Ingresa un precio válido.");
+    var m2 = parseFloat(v("p_m2")); if (isNaN(m2) || m2 <= 0) return err("Ingresa la superficie en m².");
+    if (desc.length < 20) return err("Agrega una descripción de al menos 20 caracteres.");
+    if (!PHONE_RE.test(phone)) return err("Ingresa un celular boliviano válido de 8 dígitos (empieza con 6 o 7).");
+    if (!$("p_ok").checked) return err("Debes confirmar que puedes publicar este inmueble.");
+    S.busy = true;
+    var btn = $("postBtn"); btn.textContent = "Publicando…"; btn.className = "btn block off";
+    try {
+      if (!S.profile || S.profile.whatsapp !== phone) {
+        var up = await sb.from("profiles").update({ whatsapp: phone }).eq("id", S.user.id).select("display_name, whatsapp").single();
+        if (up.error) throw up.error;
+        S.profile = up.data;
+      }
+      var row = { operation: S.postOp, property_type: TIPO_KEY[v("p_tipo")], title: title, description: desc, city: v("p_city"), zone: zona, price: price, currency: v("p_cur"),
+        bedrooms: parseInt(v("p_dorm"), 10), bathrooms: parseInt(v("p_banos"), 10), area_m2: m2,
+        furnished: $("p_amoblado").checked, pets_allowed: $("p_mascotas").checked, has_garage: $("p_garaje").checked };
+      var ins = await sb.from("properties").insert(row).select("*").single();
+      if (ins.error) throw ins.error;
+      var prop = ins.data, failed = 0, rows = [];
+      for (var i = 0; i < S.photos.length; i++) {
+        var path = S.user.id + "/" + uuid() + ".jpg";
+        var up2 = await sb.storage.from(CONFIG.BUCKET).upload(path, dataUrlToBlob(S.photos[i]), { contentType: "image/jpeg", cacheControl: "31536000" });
+        if (up2.error) { failed++; continue; }
+        rows.push({ property_id: prop.id, path: path, position: i });
+      }
+      if (rows.length) {
+        var im = await sb.from("property_images").insert(rows);
+        if (im.error) { failed += rows.length; rows = []; }
+      }
+      prop.property_images = rows;
+      fromRow(prop);
+      S.mineItems = []; S.photos = [];
+      S.tab = "home"; S.op = prop.operation; S.city = "all"; $("city").value = "all"; S.q = ""; $("search").value = "";
+      render();
+      loadListings();
+      openDetail(prop.id);
+      toast(failed ? "Anuncio publicado, pero " + failed + " foto(s) no se pudieron subir." : "¡Anuncio publicado!");
+    } catch (e) {
+      err(fe(e));
+      var b2 = $("postBtn"); if (b2) { b2.textContent = "Publicar anuncio"; b2.className = "btn block"; }
+    } finally { S.busy = false; }
+  }
+
+  /* ============ Detalle ============ */
+  function detailHTML(it) {
+    var fav = S.favIds[it.id], mine = isMine(it);
+    var sp = [["Tipo", it.tipo], ["Operación", OPN[it.op]]];
+    if (it.dorm > 0) sp.push(["Dormitorios", it.dorm]);
+    if (it.banos > 0) sp.push(["Baños", it.banos]);
+    sp.push(["Superficie", it.m2 + " m²"], ["Amoblado", it.amoblado ? "Sí" : "No"], ["Mascotas", it.mascotas ? "Sí" : "No"], ["Garaje", it.garaje ? "Sí" : "No"]);
+    var gal = it.photos && it.photos.length ? it.photos.map(function (p, i) { return '<div class="ph" style="--h:' + it.hue + '"><img alt="Foto ' + (i + 1) + " de " + esc(it.title) + '" src="' + esc(p) + '"></div>'; }).join("") : '<div class="ph" style="--h:' + it.hue + '">' + (EMO[it.tipo] || "🏠") + "</div>";
+    var bar;
+    if (mine) bar = '<div style="flex:1;color:var(--muted)">Este es tu anuncio.</div>';
+    else if (it.demo) bar = favBtn(fav) + '<button class="btn wa" data-act="demo">WhatsApp</button><button class="btn ghost" data-act="demo">Llamar</button>';
+    else if (!S.user) bar = favBtn(fav) + '<button class="btn wa" data-act="login-contact">Ingresa para ver el contacto</button>';
+    else {
+      var c = contacts[it.id];
+      if (c && c !== "loading" && PHONE_RE.test(c.whatsapp || "")) {
+        var msg = encodeURIComponent("Hola, vi tu anuncio «" + it.title + "» en Techo y me interesa. ¿Sigue disponible?");
+        bar = favBtn(fav) + '<a class="btn wa" target="_blank" rel="noopener noreferrer" href="https://wa.me/591' + c.whatsapp + "?text=" + msg + '">WhatsApp</a><a class="btn ghost" href="tel:+591' + c.whatsapp + '">Llamar</a>';
+      } else if (c === null) bar = favBtn(fav) + '<div style="flex:1;color:var(--muted);font-size:14px">El vendedor aún no tiene un contacto disponible.</div>';
+      else bar = favBtn(fav) + '<button class="btn wa off">Cargando contacto…</button>';
+    }
+    var statusNote = mine && it.status !== "published" ? '<div class="note safe">' + (it.status === "closed" ? "Este anuncio está cerrado y no aparece en el listado público." : "Este anuncio fue ocultado por moderación.") + "</div>" : "";
+    return '<div class="dpage"><div class="dtop"><button class="back" data-act="back">‹ Volver</button><b>' + OPN[it.op] + "</b></div>" +
+      '<div class="gal">' + gal + "</div>" + (it.photos && it.photos.length > 1 ? '<div class="dots">Desliza para ver las ' + it.photos.length + " fotos</div>" : "") +
+      '<div class="dbody"><div class="dpr pr ' + it.op + '">' + priceInfo(it) + "<small>" + suffix(it) + "</small></div>" +
+      "<h2>" + esc(it.title) + '</h2><div class="loc">📍 ' + esc(it.zona) + ", " + esc(it.city) + " · publicado " + ago(it.createdAt) + "</div>" + statusNote +
+      '<div class="specs">' + sp.map(function (p) { return "<div><small>" + p[0] + "</small><b>" + esc(p[1]) + "</b></div>"; }).join("") + "</div>" +
+      '<h4>Descripción</h4><p class="desc">' + esc(it.desc) + "</p>" +
+      (it.op === "anticretico" ? '<div class="note ant"><b>Sobre el anticrético:</b> el inquilino entrega un monto único y vive en el inmueble sin pagar alquiler mensual durante el plazo del contrato. Al terminar, el propietario devuelve el monto. <button class="linkbtn" data-act="info-ant">Leer más</button></div>' : "") +
+      '<div class="pub"><div class="avatar">' + esc(String(it.by || "U").charAt(0).toUpperCase()) + "</div><div><b>" + esc(it.by) + "</b><small>" + (it.demo ? "Anuncio de ejemplo" : "Publicó " + ago(it.createdAt)) + "</small></div></div>" +
+      '<div class="note safe"><b>Antes de pagar:</b> visita el inmueble, verifica que quien te atiende sea el propietario y nunca envíes dinero por adelantado. <button class="linkbtn" data-act="info-safe">Ver consejos</button></div>' +
+      (mine ? "" : '<p style="margin-top:12px"><button class="linkbtn" data-act="report">Reportar este anuncio</button></p>') +
+      '</div><div class="dbar">' + bar + "</div></div>";
+  }
+  function favBtn(on) { return '<button class="favbtn' + (on ? " on" : "") + '" data-act="fav-detail" aria-label="Favorito">' + (on ? "♥" : "♡") + "<small>" + (on ? "Guardado" : "Guardar") + "</small></button>"; }
+  function redrawDetail() {
+    var it = cache[S.detail]; if (!it) return;
+    var d = $("detail"), st = d.scrollTop; d.innerHTML = detailHTML(it); d.scrollTop = st;
+  }
+  function ensureContact(id) {
+    var it = cache[id];
+    if (!sb || !S.user || !it || it.demo || isMine(it) || contacts[id] !== undefined) return;
+    contacts[id] = "loading";
+    sb.rpc("get_seller_contact", { p_kind: "property", p_id: id }).then(function (r) {
+      var row = !r.error && r.data && r.data[0];
+      contacts[id] = row && row.whatsapp ? row : null;
+      if (S.detail === id) redrawDetail();
+    }, function () { delete contacts[id]; });
+  }
+  function openDetail(id) {
+    var it = cache[id]; if (!it) return;
+    S.detail = id;
+    var d = $("detail"); d.innerHTML = detailHTML(it); d.className = "show"; d.scrollTop = 0;
+    ensureContact(id);
+  }
+  function closeDetail() { S.detail = null; $("detail").className = ""; refreshView(); }
+
+  /* ============ Hojas (ventanas inferiores) ============ */
+  function openSheet(title, body) { $("sheetBody").innerHTML = '<div class="sh"><b>' + title + '</b><button class="x" data-act="close-sheet" aria-label="Cerrar">✕</button></div>' + body; $("sheet").className = "show"; }
+  function closeSheet() { $("sheet").className = ""; }
+  function infoAnt() {
+    openSheet("¿Qué es el anticrético?",
+      "<p>Es un contrato muy usado en Bolivia: el inquilino entrega al propietario una suma de dinero única y, a cambio, vive en el inmueble durante el plazo pactado <b>sin pagar alquiler mensual</b>. Al terminar el contrato, el propietario le devuelve el monto.</p>" +
+      "<p><b>Para el inquilino:</b> no paga mensualidades, pero inmoviliza una suma grande y depende de que se la devuelvan.</p><p><b>Para el propietario:</b> recibe un capital que puede usar durante el plazo, pero debe devolverlo íntegro.</p>" +
+      "<p>Se recomienda formalizar el contrato ante notario, revisar la documentación del inmueble y consultar con un abogado antes de entregar el dinero. Las exigencias legales pueden cambiar; verifica siempre la normativa vigente.</p>");
+  }
+  function infoSafe() {
+    openSheet("Consejos de seguridad",
+      "<ul><li>Visita siempre el inmueble antes de pagar cualquier monto.</li><li>Pide el documento de identidad del propietario y verifica que coincida con los documentos del inmueble (folio real).</li><li>Desconfía de precios muy por debajo del mercado.</li><li>No envíes dinero ni reservas por adelantado a desconocidos.</li><li>Firma un contrato por escrito y, para anticrético o venta, hazlo ante notario.</li><li>Cita en lugares públicos o con alguien de confianza.</li><li>Si algo te parece sospechoso, reporta el anuncio.</li></ul>");
+  }
+  function openReport() {
+    var it = cache[S.detail];
+    if (!it || it.demo) { toast("Los anuncios de ejemplo no se pueden reportar."); return; }
+    if (!S.user) { openAuth("login", "Ingresa para reportar un anuncio."); return; }
+    openSheet("Reportar anuncio",
+      fld("Motivo", '<select id="r_why">' + opts(Object.keys(RMAP)) + "</select>") +
+      fld("Detalles (opcional)", '<textarea id="r_det" maxlength="500" style="min-height:70px" placeholder="Cuéntanos qué pasó"></textarea>') +
+      '<div class="err" id="sErr"></div><button class="btn block" data-act="submit-report">Enviar reporte</button>');
+  }
+  async function submitReport() {
+    var id = S.detail; if (!id || S.busy) return;
+    S.busy = true;
+    try {
+      var det = $("r_det").value.trim();
+      var r = await sb.from("reports").insert({ property_id: id, reason: RMAP[$("r_why").value], details: det || null });
+      if (r.error) { if (r.error.code === "23505") { closeSheet(); toast("Ya reportaste este anuncio."); } else $("sErr").textContent = fe(r.error); }
+      else { closeSheet(); toast("Gracias. Revisaremos el anuncio."); }
+    } catch (e) { $("sErr").textContent = fe(e); } finally { S.busy = false; }
+  }
+
+  /* ---- Cuenta ---- */
+  function authHTML(mode, msg) {
+    var login = mode === "login";
+    return (msg ? '<div class="note safe" style="margin:0 0 12px">' + esc(msg) + "</div>" : "") +
+      '<div class="seg"><button data-act="auth-tab" data-mode="login" class="' + (login ? "on" : "") + '">Ingresar</button><button data-act="auth-tab" data-mode="signup" class="' + (!login ? "on" : "") + '">Crear cuenta</button></div>' +
+      (login ? "" : fld("Tu nombre", '<input type="text" id="a_name" maxlength="40" autocomplete="name" placeholder="Nombre o inmobiliaria">')) +
+      fld("Correo electrónico", '<input type="text" id="a_email" inputmode="email" autocomplete="email" autocapitalize="none" placeholder="tucorreo@ejemplo.com">') +
+      fld("Contraseña", '<input type="password" id="a_pass" autocomplete="' + (login ? "current-password" : "new-password") + '" placeholder="Mínimo 8 caracteres">') +
+      '<div class="err" id="authErr"></div><button class="btn block" id="authBtn" data-act="auth-submit">' + (login ? "Ingresar" : "Crear cuenta") + "</button>" +
+      (login ? '<p style="text-align:center;margin:10px 0 0"><button class="linkbtn" data-act="auth-forgot">¿Olvidaste tu contraseña?</button></p>' : '<p class="hint" style="margin-top:10px">Usa un correo al que tengas acceso.</p>');
+  }
+  function openAuth(mode, msg) {
+    if (!sb) { toast("El servicio no está disponible. Recarga la página."); return; }
+    S.authMode = mode;
+    openSheet(mode === "login" ? "Ingresar" : "Crear cuenta", authHTML(mode, msg));
+  }
+  async function authSubmit() {
+    if (S.busy) return;
+    var email = $("a_email").value.trim(), pass = $("a_pass").value, name = $("a_name") ? $("a_name").value.trim() : "";
+    var err = function (m) { $("authErr").textContent = m; };
+    err("");
+    if (!EMAIL_RE.test(email)) return err("Escribe un correo válido.");
+    if (pass.length < 8) return err("La contraseña debe tener al menos 8 caracteres.");
+    if (S.authMode === "signup" && (name.length < 2 || name.length > 40)) return err("Escribe tu nombre (entre 2 y 40 caracteres).");
+    S.busy = true;
+    var btn = $("authBtn"); btn.className = "btn block off";
+    try {
+      if (S.authMode === "signup") {
+        var r = await sb.auth.signUp({ email: email, password: pass, options: { data: { display_name: name } } });
+        if (r.error) throw r.error;
+        if (r.data.session) { closeSheet(); toast("¡Cuenta creada! Ya puedes publicar."); }
+        else { $("sheetBody").innerHTML = '<div class="sh"><b>Revisa tu correo</b><button class="x" data-act="close-sheet" aria-label="Cerrar">✕</button></div><p>Te enviamos un enlace para confirmar tu cuenta a <b>' + esc(email) + "</b>. Ábrelo y luego vuelve a ingresar.</p>"; }
+      } else {
+        var r2 = await sb.auth.signInWithPassword({ email: email, password: pass });
+        if (r2.error) throw r2.error;
+        closeSheet(); toast("Sesión iniciada.");
+      }
+    } catch (e) { err(authErr(e)); var b = $("authBtn"); if (b) b.className = "btn block"; } finally { S.busy = false; }
+  }
+  async function authForgot() {
+    var email = $("a_email").value.trim();
+    if (!EMAIL_RE.test(email)) { $("authErr").textContent = "Escribe tu correo arriba y vuelve a tocar el enlace."; return; }
+    var r = await sb.auth.resetPasswordForEmail(email, { redirectTo: location.origin + location.pathname });
+    if (r.error) $("authErr").textContent = authErr(r.error);
+    else { $("authErr").textContent = ""; toast("Si el correo existe, te enviamos un enlace para cambiar la contraseña."); }
+  }
+  function openNewPassword() {
+    openSheet("Nueva contraseña", fld("Escribe tu nueva contraseña", '<input type="password" id="n_pass" autocomplete="new-password" placeholder="Mínimo 8 caracteres">') +
+      '<div class="err" id="sErr"></div><button class="btn block" data-act="newpass-submit">Guardar contraseña</button>');
+  }
+  async function newPassSubmit() {
+    var p = $("n_pass").value;
+    if (p.length < 8) { $("sErr").textContent = "La contraseña debe tener al menos 8 caracteres."; return; }
+    var r = await sb.auth.updateUser({ password: p });
+    if (r.error) $("sErr").textContent = authErr(r.error); else { closeSheet(); toast("Contraseña actualizada."); }
+  }
+  function openAccount() {
+    var p = S.profile || { display_name: "", whatsapp: "" };
+    openSheet("Mi cuenta", '<p style="margin:0 0 10px;color:var(--muted)">' + esc(S.user.email || "") + "</p>" +
+      fld("Nombre", '<input type="text" id="c_name" maxlength="40" value="' + esc(p.display_name) + '">') +
+      fld("WhatsApp", '<input type="tel" id="c_phone" inputmode="numeric" maxlength="8" value="' + esc(p.whatsapp || "") + '" placeholder="8 dígitos, ej.: 71234567">', "Solo lo ven usuarios registrados cuando abren tus anuncios.") +
+      '<div class="err" id="cErr"></div><button class="btn block" data-act="acct-save">Guardar</button>' +
+      '<p style="text-align:center;margin:12px 0 0"><button class="linkbtn" data-act="logout">Cerrar sesión</button></p>');
+  }
+  async function acctSave() {
+    var nm = $("c_name").value.trim(), ph = $("c_phone").value.trim();
+    if (nm.length < 1 || nm.length > 40) { $("cErr").textContent = "Escribe un nombre (hasta 40 caracteres)."; return; }
+    if (ph && !PHONE_RE.test(ph)) { $("cErr").textContent = "El WhatsApp debe tener 8 dígitos y empezar con 6 o 7."; return; }
+    var r = await sb.from("profiles").update({ display_name: nm, whatsapp: ph || null }).eq("id", S.user.id).select("display_name, whatsapp").single();
+    if (r.error) { $("cErr").textContent = fe(r.error); return; }
+    S.profile = r.data; chrome(); closeSheet(); toast("Datos guardados.");
+  }
+
+  /* ============ Favoritos, estado y borrado ============ */
+  function toggleFav(id) {
+    if (!S.user) { openAuth("login", "Ingresa para guardar tus favoritos."); return; }
+    var it = cache[id];
+    if (!it || it.demo) { toast("Los anuncios de ejemplo no se pueden guardar."); return; }
+    var on = !!S.favIds[id];
+    if (on) delete S.favIds[id]; else S.favIds[id] = 1;
+    refreshView(); if (S.detail === id) redrawDetail();
+    var p = on ? sb.from("favorites").delete().eq("property_id", id).eq("user_id", S.user.id) : sb.from("favorites").insert({ property_id: id });
+    p.then(function (r) {
+      if (r.error && !(r.error.code === "23505")) {
+        if (on) S.favIds[id] = 1; else delete S.favIds[id];
+        refreshView(); if (S.detail === id) redrawDetail();
+        toast("No se pudo actualizar tu favorito.");
+      } else toast(on ? "Quitado de favoritos" : "Guardado en favoritos");
+    });
+  }
+  async function toggleStatus(id) {
+    var it = cache[id]; if (!it || !isMine(it)) return;
+    var next = it.status === "closed" ? "published" : "closed";
+    var r = await sb.from("properties").update({ status: next }).eq("id", id).eq("owner_id", S.user.id);
+    if (r.error) { toast(fe(r.error)); return; }
+    it.status = next; toast(next === "closed" ? "Anuncio cerrado." : "Anuncio publicado de nuevo.");
+    loadListings(); refreshView();
+  }
+  async function deleteListing(id) {
+    var it = cache[id]; if (!it || !isMine(it)) return;
+    var r = await sb.from("properties").delete().eq("id", id).eq("owner_id", S.user.id);
+    if (r.error) { toast(fe(r.error)); return; }
+    if (it.paths && it.paths.length) sb.storage.from(CONFIG.BUCKET).remove(it.paths);
+    S.mineItems = S.mineItems.filter(function (x) { return x.id !== id; });
+    items = items.filter(function (x) { return x.id !== id; });
+    delete S.favIds[id]; delete cache[id]; S.delArm = null;
+    toast("Anuncio eliminado."); refreshView();
+  }
+
+  /* ============ Render general ============ */
+  function chrome() {
+    var home = S.tab === "home";
+    $("top").className = "top" + (home ? "" : " plain");
+    $("city").style.display = home ? "" : "none";
+    $("ptitle").textContent = home ? "" : { post: "Publicar anuncio", favs: "Favoritos", mine: "Mis anuncios" }[S.tab];
+    var a = $("acct");
+    if (S.user) {
+      var nm = (S.profile && S.profile.display_name) || S.user.email || "U";
+      a.textContent = String(nm).charAt(0).toUpperCase(); a.className = "acct in"; a.setAttribute("aria-label", "Mi cuenta");
+    } else { a.textContent = "Ingresar"; a.className = "acct"; a.setAttribute("aria-label", "Ingresar o crear cuenta"); }
+    Array.prototype.forEach.call(document.querySelectorAll(".tab"), function (b) { b.className = "tab" + (b.getAttribute("data-op") === S.op ? " on" : ""); });
+    Array.prototype.forEach.call(document.querySelectorAll(".nav button"), function (b) { b.className = (b.getAttribute("data-tab") === S.tab ? "on " : "") + (b.getAttribute("data-tab") === "post" ? "plus" : ""); });
+  }
+  function view() {
+    if (S.tab === "home") renderHome(); else if (S.tab === "post") renderPost(); else if (S.tab === "favs") renderFavs(); else renderMine();
+  }
+  function render() { chrome(); view(); }
+  function refreshView() { chrome(); if (S.tab !== "post") view(); }
+  function setTab(t) {
+    S.tab = t; S.delArm = null; render(); window.scrollTo(0, 0);
+    if (S.user) { if (t === "favs") loadFavItems(); if (t === "mine") loadMine(); }
+  }
+
+  /* ============ Eventos ============ */
+  document.addEventListener("click", function (e) {
+    var t = e.target, el;
+    if ((el = t.closest("[data-fav]"))) { toggleFav(el.getAttribute("data-fav")); e.stopPropagation(); return; }
+    if ((el = t.closest("[data-rmphoto]"))) { S.photos.splice(parseInt(el.getAttribute("data-rmphoto"), 10), 1); drawPhotos(); return; }
+    if ((el = t.closest("[data-act]"))) { act(el.getAttribute("data-act"), el); return; }
+    if ((el = t.closest("[data-postop]"))) { setPostOp(el.getAttribute("data-postop")); return; }
+    if ((el = t.closest("[data-op]"))) { S.op = el.getAttribute("data-op"); render(); return; }
+    if ((el = t.closest("[data-tab]"))) { setTab(el.getAttribute("data-tab")); return; }
+    if ((el = t.closest("[data-f]"))) { S.f[el.getAttribute("data-f")] = el.getAttribute("data-v"); renderHome(); return; }
+    if ((el = t.closest("[data-toggle]"))) { var k = el.getAttribute("data-toggle"); S.f[k] = !S.f[k]; renderHome(); return; }
+    if (t.id === "sheet") { closeSheet(); return; }
+    if ((el = t.closest("[data-open]"))) { openDetail(el.getAttribute("data-open")); return; }
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") {
+      if (e.target.id && /^a_/.test(e.target.id)) { authSubmit(); return; }
+      var el = e.target.closest && e.target.closest("[data-open]"); if (el && e.target === el) openDetail(el.getAttribute("data-open"));
+    }
+    if (e.key === "Escape") { if ($("sheet").className) closeSheet(); else if (S.detail) closeDetail(); }
+  });
+  document.addEventListener("change", function (e) { if (e.target.id === "p_photos") { addPhotos(e.target.files); e.target.value = ""; } });
+  $("search").addEventListener("input", function (e) { S.q = e.target.value; if (S.tab === "home") renderHome(); });
+  $("city").addEventListener("change", function (e) { S.city = e.target.value; renderHome(); });
+
+  function act(a, el) {
+    var id = S.detail;
+    if (a === "back") closeDetail();
+    else if (a === "close-sheet") closeSheet();
+    else if (a === "acct") { if (S.user) openAccount(); else openAuth("login"); }
+    else if (a === "goto-auth") openAuth(el.getAttribute("data-mode"));
+    else if (a === "auth-tab") openAuth(el.getAttribute("data-mode"));
+    else if (a === "auth-submit") authSubmit();
+    else if (a === "auth-forgot") authForgot();
+    else if (a === "newpass-submit") newPassSubmit();
+    else if (a === "acct-save") acctSave();
+    else if (a === "logout") { sb.auth.signOut().then(function () { closeSheet(); toast("Sesión cerrada."); }); }
+    else if (a === "login-contact") openAuth("login", "Ingresa para ver el contacto del vendedor.");
+    else if (a === "fav-detail") toggleFav(id);
+    else if (a === "info-ant") infoAnt();
+    else if (a === "info-safe") infoSafe();
+    else if (a === "demo") openSheet("Anuncio de ejemplo", "<p>Este anuncio es parte de la demostración y no tiene un contacto real. Los anuncios reales muestran el WhatsApp del vendedor a los usuarios registrados.</p>");
+    else if (a === "report") openReport();
+    else if (a === "submit-report") submitReport();
+    else if (a === "reload") loadListings();
+    else if (a === "clear") { S.q = ""; $("search").value = ""; S.op = "todos"; S.f = { tipo: "todos", dorm: "any", amoblado: false, mascotas: false, garaje: false, sort: "new", cur: S.f.cur }; render(); }
+    else if (a === "submit-post") submitPost();
+    else if (a === "toggle-status") toggleStatus(el.getAttribute("data-id"));
+    else if (a === "del") {
+      var did = el.getAttribute("data-id");
+      if (S.delArm === did) deleteListing(did); else { S.delArm = did; renderMine(); }
+    }
+  }
+
+  render();
+  loadListings();
+})();
+</script>
+</body>
+</html>
